@@ -1,4 +1,4 @@
-const API_KEY = ""; // Replace with your API Key
+const API_KEY = "https://chatgpt-backend.vercel.app/api/chat"; // Replace with your API Key
 
 async function sendMessage() {
     const userInput = document.getElementById("user-input").value;
