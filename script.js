@@ -9,58 +9,21 @@ async function sendMessage() {
     document.getElementById("user-input").value = "";
 
     try {
-        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        const response = await fetch(API_URL, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${API_KEY}`
-            },
-            body: JSON.stringify({
-                model: "gpt-3.5-turbo",
-                messages: [{ role: "user", content: userInput }]
-            })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: userInput })
         });
 
         const data = await response.json();
-        if (response.status !== 200) {
+        if (data.choices) {
+            const reply = data.choices[0].message.content;
+            chatBox.innerHTML += `<div class="bot-message">${reply}</div>`;
+        } else {
             chatBox.innerHTML += `<div class="bot-message">Error: ${data.error?.message || "Unknown error"}</div>`;
-            return;
         }
-
-        let reply = data.choices[0].message.content;
-        reply = formatMessage(reply);
-
-        chatBox.innerHTML += `<div class="bot-message">${reply}</div>`;
-
-        // Apply syntax highlighting
-        document.querySelectorAll("pre code").forEach((block) => {
-            hljs.highlightElement(block);
-        });
-
     } catch (error) {
         chatBox.innerHTML += `<div class="bot-message">Connection Error</div>`;
         console.error("Error:", error);
     }
-}
-
-// Function to format ChatGPT code blocks
-function formatMessage(text) {
-    return text.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
-        const language = lang ? lang : "plaintext"; 
-        return `
-            <div class="code-window">
-                <div class="code-header">${language.toUpperCase()}</div>
-                <pre><code class="${language}">${escapeHTML(code)}</code></pre>
-            </div>
-        `;
-    });
-}
-
-// Escape HTML to prevent rendering issues
-function escapeHTML(str) {
-    return str.replace(/&/g, "&amp;")
-              .replace(/</g, "&lt;")
-              .replace(/>/g, "&gt;")
-              .replace(/"/g, "&quot;")
-              .replace(/'/g, "&#039;");
 }
