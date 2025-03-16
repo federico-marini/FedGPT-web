@@ -1,4 +1,5 @@
-const API_URL = "https://chatgpt-backend.vercel.app/api/chat"; // Replace with your actual Vercel backend URL
+const API_URL = "https://chatgpt-backend-pqxzeh2pp-federico-marinis-projects.vercel.app/api/chat
+"; // Replace with your actual Vercel backend URL
 
 async function sendMessage() {
     const userInput = document.getElementById("user-input").value;
