@@ -1,0 +1,74 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #121212;
+    color: white;
+}
+
+#chat-container {
+    width: 400px;
+    margin: auto;
+    padding: 15px;
+    border: 1px solid #444;
+    border-radius: 10px;
+    background-color: #1e1e1e;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
+}
+
+#chat {
+    height: 300px;
+    overflow-y: auto;
+    border-bottom: 1px solid #555;
+    padding: 10px;
+}
+
+.user-message {
+    text-align: right;
+    background-color: #0078d4;
+    padding: 8px;
+    border-radius: 8px;
+    margin: 5px;
+    display: inline-block;
+    max-width: 80%;
+    color: white;
+}
+
+.bot-message {
+    text-align: left;
+    background-color: #2a2a2a;
+    padding: 8px;
+    border-radius: 8px;
+    margin: 5px;
+    display: inline-block;
+    max-width: 80%;
+}
+
+/* Code Block Styling */
+.code-window {
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    margin: 10px 0;
+    padding: 0;
+    box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.1);
+}
+
+.code-header {
+    background-color: #444;
+    color: #ddd;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 8px 8px 0 0;
+    text-align: left;
+}
+
+pre {
+    margin: 0;
+    padding: 10px;
+    overflow-x: auto;
+    border-radius: 0 0 8px 8px;
+}
+
+code {
+    font-family: monospace;
+}
