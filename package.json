@@ -1,0 +1,14 @@
+{
+  "name": "FedGPT-web",
+  "version": "1.0.0",
+  "description": "Il mio sito ChatGPT",
+  "main": "index.js",
+  "scripts": {
+    "start": "echo \"Avvia il sito...\""
+  },
+  "author": "Federico Marini",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
+}
