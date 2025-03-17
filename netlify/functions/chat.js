@@ -1,7 +1,8 @@
 const fetch = require("node-fetch");
 
 exports.handler = async function(event, context) {
-  // Controllo del metodo HTTP
+  console.log("Event received:", event); // Log dell'evento per vedere cosa arriva
+
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -12,6 +13,7 @@ exports.handler = async function(event, context) {
   let payload;
   try {
     payload = JSON.parse(event.body);
+    console.log("Payload parsed:", payload); // Log del payload
   } catch (parseError) {
     console.error("Error parsing JSON:", parseError);
     return {
@@ -22,6 +24,7 @@ exports.handler = async function(event, context) {
   
   const { message } = payload;
   if (!message) {
+    console.error("No message provided in payload");
     return {
       statusCode: 400,
       body: JSON.stringify({ error: "Message is required" })
@@ -41,7 +44,6 @@ exports.handler = async function(event, context) {
       })
     });
     
-    // Se la risposta non è OK, logghiamo i dettagli
     if (!response.ok) {
       const errorText = await response.text();
       console.error("OpenAI API error:", response.status, errorText);
@@ -52,6 +54,7 @@ exports.handler = async function(event, context) {
     }
     
     const data = await response.json();
+    console.log("OpenAI API response:", data);
     return {
       statusCode: 200,
       body: JSON.stringify(data)
