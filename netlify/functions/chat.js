@@ -1,7 +1,6 @@
 const fetch = require("node-fetch");
 
 exports.handler = async function(event, context) {
-  // Controlla che il metodo usato sia POST
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -9,11 +8,9 @@ exports.handler = async function(event, context) {
     };
   }
   
-  // Estrai il messaggio dalla richiesta
   const { message } = JSON.parse(event.body);
-
+  
   try {
-    // Chiama l'API di OpenAI
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -21,7 +18,7 @@ exports.handler = async function(event, context) {
         "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo", // Oppure "gpt-4" se preferisci
+        model: "gpt-3.5-turbo",
         messages: [{ role: "user", content: message }]
       })
     });
@@ -32,9 +29,10 @@ exports.handler = async function(event, context) {
       body: JSON.stringify(data)
     };
   } catch (error) {
+    console.error("Fetch error:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Errore nella connessione a OpenAI" })
+      body: JSON.stringify({ error: "Errore nella connessione a OpenAI", details: error.toString() })
     };
   }
 };
