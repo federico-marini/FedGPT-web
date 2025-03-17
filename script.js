@@ -1,4 +1,4 @@
-const API_URL = "const API_URL = "https://flourishing-daffodil-0ece32.netlify.app/.netlify/functions/chat"; // Replace with your actual Vercel backend URL
+const API_URL = "https://flourishing-daffodil-0ece32.netlify.app/.netlify/functions/chat";
 
 async function sendMessage() {
     const userInput = document.getElementById("user-input").value;
