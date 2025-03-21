@@ -1,67 +1,38 @@
 const fetch = require("node-fetch");
 
-exports.handler = async function(event, context) {
-  // Controlla che il metodo usato sia POST
-  if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ error: "Method Not Allowed" })
-    };
-  }
+exports.handler = async (event, context) => {
+  try {
+    const { prompt } = JSON.parse(event.body);
 
-  let payload;
-  try {
-    payload = JSON.parse(event.body);
-  } catch (parseError) {
-    console.error("Error parsing JSON:", parseError);
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: "Invalid JSON in request body" })
-    };
-  }
-  
-  const { message } = payload;
-  if (!message) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: "Message is required" })
-    };
-  }
-  
-  try {
-    // Chiamata all'API di Deepseek:
-    // Verifica l'endpoint e il formato del payload nella documentazione di Deepseek.
-    const response = await fetch("https://api.deepseek.com/v1/query", {
+    const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.DEEPSEEK_API_KEY}`
+        "Authorization": `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+        "Accept": "application/json" // Aggiungi questo header
       },
-      // Supponiamo che Deepseek si aspetti un campo "query"
-      body: JSON.stringify({ query: message })
+      body: JSON.stringify({
+        model: "deepseek-chat", // Modello corretto per Deepseek
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.7,
+        max_tokens: 150 // Aggiungi parametri richiesti
+      })
     });
-    
+
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Deepseek API error:", response.status, errorText);
-      return {
-        statusCode: response.status,
-        body: JSON.stringify({ error: "Deepseek API error", details: errorText })
-      };
+      const errorData = await response.json();
+      throw new Error(`Deepseek API error: ${errorData.message || response.statusText}`);
     }
-    
+
     const data = await response.json();
-    console.log("Deepseek API response:", data);
     return {
       statusCode: 200,
-      body: JSON.stringify(data)
+      body: JSON.stringify({ text: data.choices[0].message.content }) // Percorso dati modificato
     };
   } catch (error) {
-    console.error("Fetch error:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Connection error to Deepseek", details: error.toString() })
+      body: JSON.stringify({ error: error.message })
     };
   }
 };
-
